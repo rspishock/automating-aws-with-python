@@ -108,7 +108,7 @@ class BucketManager:
                 self.manifest[obj['Key']] = obj['ETag']
 
     @staticmethod
-    def has_data(data):
+    def hash_data(data):
         """Generate md5 hash for data."""
         hash = md5()
         hash.update(data)
@@ -126,14 +126,14 @@ class BucketManager:
                 if not data:
                     break
 
-                hashes.append(self.has_data(data))
+                hashes.append(self.hash_data(data))
 
             if not hashes:
                 return
             elif len(hashes) == 1:
                 return '"{}"'.format(hashes[0].hexdigest())
             else:
-                hash = self.has_data(reduce(lambda x, y: x + y, (h.digest() for h in hashes)))
+                hash = self.hash_data(reduce(lambda x, y: x + y, (h.digest() for h in hashes)))
                 return '"{}-{}"'.format(hash.hexdigest(), len(hashes))
 
     def upload_file(self, bucket, path, key):
