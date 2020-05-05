@@ -138,7 +138,7 @@ class BucketManager:
                 return '"{}"'.format(hashes[0].hexdigest())
             else:
                 digests = (h.digest() for h in hashes)
-                hash = self.hash_data(reduce(lambda x, y: x + y, digests)
+                hash = self.hash_data(reduce(lambda x, y: x + y, digests))
                 return '"{}-{}"'.format(hash.hexdigest(), len(hashes))
 
     def upload_file(self, bucket, path, key):
