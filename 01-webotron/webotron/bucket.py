@@ -26,7 +26,6 @@ class BucketManager:
             multipart_chucnksize=self.CHUNK_SIZE,
             multipart_threshold=self.CHUNK_SIZE
         )
-
         self.manifest = {}
 
     def get_bucket(self, bucket_name):
@@ -35,13 +34,17 @@ class BucketManager:
 
     def get_region_name(self, bucket):
         """Get the bucket's region name."""
-        bucket_location = self.s3.meta.client.get_bucket_location(Bucket=bucket.name)
+        client = self.s3.meta.client
+        bucket_location = client.get_bucket_location(Bucket=bucket.name)
 
         return bucket_location["LocationConstraint"] or 'us-east-1'
 
     def get_bucket_url(self, bucket):
         """Get the website URL for this bucket."""
-        return "http://{}.{}".format(bucket.name, util.get_endpoint(self.get_region_name(bucket)).host)
+        return "http://{}.{}".format(
+            bucket.name, 
+            util.get_endpoint(self.get_region_name(bucket)).host
+            )
 
     def all_buckets(self):
         """Get an iterator for all buckets."""
@@ -135,11 +138,13 @@ class BucketManager:
             if not hashes:
                 return
             elif len(hashes) == 1:
-                return '"{}"'.format(hashes[0].hexdigest())
+                # return '"{}"'.format(hashes[0].hexdigest())
+                return f'"{hashes[0].hexdigest()}"'
             else:
                 digests = (h.digest() for h in hashes)
                 hash = self.hash_data(reduce(lambda x, y: x + y, digests))
-                return '"{}-{}"'.format(hash.hexdigest(), len(hashes))
+                # return '"{}-{}"'.format(hash.hexdigest(), len(hashes))
+                return f'"{hash.digest()}-{len(hashes)}""'
 
     def upload_file(self, bucket, path, key):
         """Upload path to s3_bucket at key."""

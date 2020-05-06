@@ -17,8 +17,9 @@ import click
 
 from webotron.bucket import BucketManager
 from webotron.domain import DomainManager
-from webotron.webotron.certificate import CertificateManager
+from webotron.certificate import CertificateManager
 from webotron.cdn import DistributionManager
+
 from webotron import util
 
 session = None
@@ -32,7 +33,7 @@ dist_manager = None
 @click.option('--profile', default=None, help="Use a given AWS profile.")
 def cli(profile):
     """Webotron deploys websites to AWS."""
-    global session, bucket_manager, domain_manager, cert_manager
+    global session, bucket_manager, domain_manager, cert_manager, dist_manager
 
     session_cfg = {}
     if profile:
@@ -82,10 +83,10 @@ def sync(pathname, bucket):
 
 @cli.command('setup-domain')
 @click.argument('domain')
-@click.argument('bucket')
 def setup_domain(domain, bucket):
     """Configure DOMAIN to point to BUCKET"""
     bucket = bucket_manager.get_bucket(domain)
+
     zone = domain_manager.find_hosted_zone(domain) \
         or domain_manager.create_hosted_zone(domain)
 
@@ -97,12 +98,15 @@ def setup_domain(domain, bucket):
 @cli.command('find-cert')
 @click.argument('domain')
 def find_cert(domain):
+    """Find a certificate for <DOMAIN>"""
     print(cert_manager.find_matching_cert(domain))
+
 
 @cli.command('setup-cdn')
 @click.argument('domain')
 @click.argument('bucket')
 def setup_cdn(domain, bucket):
+    """Set up a CloudFront CDN for DOMAIN pointing to BUCKET."""
     dist = dist_manager.find_matching_dist(domain)
 
     if not dist:

@@ -6,7 +6,10 @@ import uuid
 
 
 class DistributionManager:
+    """Manage CloudFront distributions"""
+
     def __init__(self, session):
+        """Create a DistributionManager"""
         self.session = session
         self.client = self.session.client('cloudfront')
 
@@ -14,10 +17,12 @@ class DistributionManager:
         """Find a dist matching domain_name"""
         paginator = self.client.get_paginator('list_distributins')
         for page in paginator.paginate():
-            for dist in page['DistributionList']['Items']:
+            print(page)
+            for dist in page['DistributionList'].get('Items', []):
                 for alias in dist['Aliases']['Items']:
                     if alias == domain_name:
                         return dist
+                        
         return None
 
     def create_dist(self, domain_name, cert):

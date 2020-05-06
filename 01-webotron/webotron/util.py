@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Utils for Webotron"""
 
 from collections import namedtuple
