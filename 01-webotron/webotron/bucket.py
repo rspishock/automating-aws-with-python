@@ -61,7 +61,7 @@ class BucketManager:
         try:
             s3_bucket = self.s3.create_bucket(
                 Bucket=bucket_name
-                # This code does not appear to work in us-east-1
+                # This code is not required in us-east-1
                 # CreateBucketConfiguration={
                 #     'LocationConstraint': self.session.region_name
                 # }
