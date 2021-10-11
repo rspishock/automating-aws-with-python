@@ -1,6 +1,6 @@
 # automating-aws-with-python
 
-Repository for automating AWS with Python
+Repository for automating AWS with Python.  Scripts are a project files from an A Cloud Guru series on utilizing Python to work with AWS.
 
 ## 01-webotron
 
